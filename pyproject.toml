@@ -1,3 +1,25 @@
+[project]
+name = "weather-enrichment-service"
+version = "0.1.0"
+description = "FastAPI service for asynchronous weather enrichment."
+requires-python = ">=3.13"
+dependencies = [
+    "asyncpg>=0.30.0",
+    "celery[redis]>=5.5.0",
+    "fastapi>=0.115.0",
+    "httpx>=0.28.0",
+    "pydantic-settings>=2.8.0",
+    "sqlalchemy[asyncio]>=2.0.0",
+    "uvicorn[standard]>=0.34.0",
+]
+
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["backend*"]
+
 [tool.black]
 line-length = 79
 target-version = ["py313"]
