@@ -4,7 +4,9 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    env_file: .env
+    env_file:
+      - path: .env
+        required: false
     depends_on:
       - postgres
       - redis
@@ -18,12 +20,26 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     command: celery -A app.core.celery_app.celery_app worker --loglevel=info
-    env_file: .env
+    env_file:
+      - path: .env
+        required: false
     depends_on:
       - postgres
       - redis
     volumes:
       - ./backend:/app/backend
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app/frontend
+      - frontend_node_modules:/app/frontend/node_modules
 
   postgres:
     image: postgres:16-alpine
@@ -43,3 +59,4 @@ services:
 
 volumes:
   postgres_data:
+  frontend_node_modules:
