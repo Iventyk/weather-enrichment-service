@@ -60,19 +60,6 @@ Remove database and frontend dependency volumes if you need a clean reset:
 docker compose down -v
 ```
 
-## Configuration
-
-The backend reads configuration from `.env`:
-
-| Variable | Default | Description |
-| --- | --- | --- |
-| `DATABASE_URL` | `postgresql+asyncpg://weather:weather@postgres:5432/weather` | PostgreSQL connection URL. |
-| `REDIS_URL` | `redis://redis:6379/0` | Redis URL for Celery broker and result backend. |
-| `OPENWEATHER_API_KEY` | empty | OpenWeather API key. If empty, deterministic mock weather is used. |
-| `CORS_ORIGINS` | `http://localhost:4200` | Comma-separated list of allowed frontend origins. |
-
-If `OPENWEATHER_API_KEY` is empty, the service uses a deterministic mock weather response so the assignment can run without external credentials.
-
 ## API
 
 ### Health check
@@ -109,8 +96,6 @@ curl -X POST http://localhost:8000/cities/1/refresh
 curl http://localhost:8000/cities/1/history
 ```
 
-## Notes
+## Frontend Demo
 
-- Database tables are created automatically on application startup to keep the test assignment simple.
-- Celery uses Redis as both broker and result backend.
-- Weather refreshes are de-duplicated with a short time window to avoid repeated snapshots from immediate duplicate tasks.
+![img.png](img.png)
