@@ -1,33 +1,31 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { finalize } from 'rxjs';
+import { CommonModule } from "@angular/common";
+import { Component, OnInit, inject } from "@angular/core";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { finalize } from "rxjs";
 
-import { City } from './models/city.model';
-import { WeatherApiService } from './services/weather-api.service';
+import { City } from "./models/city.model";
+import { WeatherApiService } from "./services/weather-api.service";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  templateUrl: "./app.component.html",
+  styleUrl: "./app.component.css",
 })
 export class AppComponent implements OnInit {
+  private readonly api = inject(WeatherApiService);
+  private readonly formBuilder = inject(FormBuilder);
+
   cities: City[] = [];
   isLoading = false;
   isSubmitting = false;
-  errorMessage = '';
+  errorMessage = "";
   refreshingCityIds = new Set<number>();
 
   cityForm = this.formBuilder.nonNullable.group({
-    name: ['', [Validators.required, Validators.maxLength(120)]],
+    name: ["", [Validators.required, Validators.maxLength(120)]],
   });
-
-  constructor(
-    private readonly api: WeatherApiService,
-    private readonly formBuilder: FormBuilder,
-  ) {}
 
   ngOnInit(): void {
     this.loadCities();
@@ -35,7 +33,7 @@ export class AppComponent implements OnInit {
 
   loadCities(): void {
     this.isLoading = true;
-    this.errorMessage = '';
+    this.errorMessage = "";
 
     this.api
       .getCities()
@@ -45,7 +43,7 @@ export class AppComponent implements OnInit {
           this.cities = cities;
         },
         error: () => {
-          this.errorMessage = 'Could not load cities. Please try again.';
+          this.errorMessage = "Could not load cities. Please try again.";
         },
       });
   }
@@ -63,7 +61,7 @@ export class AppComponent implements OnInit {
     }
 
     this.isSubmitting = true;
-    this.errorMessage = '';
+    this.errorMessage = "";
 
     this.api
       .createCity(name)
@@ -74,24 +72,24 @@ export class AppComponent implements OnInit {
           this.loadCities();
         },
         error: () => {
-          this.errorMessage = 'Could not add the city. Please try again.';
+          this.errorMessage = "Could not add the city. Please try again.";
         },
       });
   }
 
   refreshWeather(cityId: number): void {
     this.refreshingCityIds.add(cityId);
-    this.errorMessage = '';
+    this.errorMessage = "";
 
     this.api
       .refreshCity(cityId)
       .pipe(finalize(() => this.refreshingCityIds.delete(cityId)))
       .subscribe({
         next: () => {
-          window.setTimeout(() => this.loadCities(), 1200);
+          setTimeout(() => this.loadCities(), 1200);
         },
         error: () => {
-          this.errorMessage = 'Could not refresh weather. Please try again.';
+          this.errorMessage = "Could not refresh weather. Please try again.";
         },
       });
   }
