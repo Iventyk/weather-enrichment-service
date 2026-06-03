@@ -1,0 +1,101 @@
+.city-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.city-card,
+.empty-state {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  box-shadow: 0 12px 30px rgb(15 23 42 / 8%);
+  padding: 1.25rem;
+}
+
+.city-card__header {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.city-card h2,
+.empty-state h2 {
+  color: #0f172a;
+  margin: 0;
+}
+
+.city-card p,
+.empty-state p {
+  color: #64748b;
+  margin: 0.35rem 0 0;
+}
+
+.weather-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.weather-metric {
+  background: #f8fafc;
+  border-radius: 0.85rem;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem;
+}
+
+.weather-metric span {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.weather-metric strong {
+  color: #0f172a;
+  font-size: 1rem;
+}
+
+.weather-metric--temperature strong {
+  color: #0369a1;
+  font-size: 1.6rem;
+}
+
+.city-card__recommendation {
+  background: #ecfeff;
+  border-radius: 0.85rem;
+  color: #155e75 !important;
+  padding: 0.85rem;
+}
+
+.city-card__updated {
+  font-size: 0.9rem;
+}
+
+.city-card__pending {
+  background: #fff7ed;
+  border-radius: 0.85rem;
+  color: #9a3412;
+  margin-top: 1rem;
+  padding: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .weather-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .city-card__header {
+    flex-direction: column;
+  }
+
+  .city-card__refresh {
+    width: 100%;
+  }
+
+  .weather-grid {
+    grid-template-columns: 1fr;
+  }
+}

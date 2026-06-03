@@ -1,8 +1,10 @@
-# weather-enrichment-service
+# Weather Enrichment Service
 
-A small FastAPI backend that stores cities, fetches current weather in Celery background tasks, enriches the data with a simple recommendation, and exposes latest and historical weather APIs.
+A small full-stack test assignment for storing cities, enriching their weather asynchronously, and viewing the latest saved weather in a simple Angular UI.
 
 ## Stack
+
+### Backend
 
 - Python 3.13
 - FastAPI
@@ -13,17 +15,47 @@ A small FastAPI backend that stores cities, fetches current weather in Celery ba
 - httpx
 - Pydantic 2
 
-## Quick start
+### Frontend
+
+- Angular 21 standalone components
+- REST API integration through `HttpClient`
+- Nginx container for the production build
+- Basic responsive UI with loading and error states
+
+## Quick start with Docker
+
+Run the whole project with one Docker Compose command from the repository root:
+
+```bash
+docker compose up --build
+```
+
+Optional setup before the first run:
 
 ```bash
 cp .env .env.local  # optional: keep defaults for Docker
 # Put your OpenWeatherMap API key into OPENWEATHERMAP_API_KEY if you have one.
-docker compose up --build
 ```
 
-The API is available at <http://localhost:8000> and the interactive documentation at <http://localhost:8000/docs>.
+Services:
 
-If `OPENWEATHERMAP_API_KEY` is empty, the service uses deterministic mock weather generated from the city name.
+- Frontend: <http://localhost:4200>
+- API: <http://localhost:8000>
+- API documentation: <http://localhost:8000/docs>
+- PostgreSQL: `localhost:5432`
+- Redis: `localhost:6379`
+
+If `OPENWEATHERMAP_API_KEY` is empty, the backend uses deterministic mock weather generated from the city name.
+
+## Local frontend development
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+The Angular dev server proxies `/api/*` requests to `http://localhost:8000`, so the frontend can call the backend without hard-coding a different browser URL.
 
 ## API
 
@@ -69,3 +101,4 @@ curl http://localhost:8000/health
 - Celery tasks are idempotent for normal enrichment runs by reusing a recent weather snapshot within `WEATHER_REFRESH_TTL_SECONDS`.
 - Manual refresh forces a new snapshot.
 - OpenWeatherMap calls are isolated in `backend/app/services/weather_client.py` so the provider can be replaced without touching API or database code.
+- The frontend talks to `/api` and uses the Angular dev proxy or Nginx reverse proxy to reach the backend.

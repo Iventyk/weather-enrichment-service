@@ -1,0 +1,33 @@
+<main class="app-shell">
+  <section class="hero">
+    <div>
+      <p class="hero__eyebrow">Weather Enrichment Service</p>
+      <h1>Cities and current weather</h1>
+      <p class="hero__description">
+        Add cities, view the latest saved weather data, and trigger
+        manual updates through the backend REST API.
+      </p>
+    </div>
+    <button
+      type="button"
+      class="hero__reload"
+      [disabled]="isLoading()"
+      (click)="loadCities()"
+    >
+      {{ isLoading() ? 'Loading...' : 'Reload list' }}
+    </button>
+  </section>
+
+  <section class="panel">
+    <app-city-form [isSubmitting]="isAdding()" (cityAdded)="addCity($event)" />
+  </section>
+
+  <p class="alert" *ngIf="errorMessage() as message">{{ message }}</p>
+  <p class="loading" *ngIf="isLoading() && !hasCities()">Loading cities...</p>
+
+  <app-city-list
+    [cities]="cities()"
+    [refreshingCityIds]="refreshingCityIds()"
+    (refreshCity)="refreshCity($event)"
+  />
+</main>

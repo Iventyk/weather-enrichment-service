@@ -1,0 +1,18 @@
+<form class="city-form" [formGroup]="form" (ngSubmit)="submit()">
+  <label for="cityName">City name</label>
+  <div class="city-form__controls">
+    <input
+      id="cityName"
+      type="text"
+      formControlName="name"
+      placeholder="For example, Kyiv"
+      autocomplete="off"
+    >
+    <button type="submit" [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Adding...' : 'Add city' }}
+    </button>
+  </div>
+  <p class="city-form__error" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+    Enter a city name up to 120 characters long.
+  </p>
+</form>

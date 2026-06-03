@@ -26,6 +26,18 @@ class Settings(BaseSettings):
         default=600,
         validation_alias="WEATHER_REFRESH_TTL_SECONDS",
     )
+    cors_allowed_origins: str = Field(
+        default="http://localhost:4200,http://127.0.0.1:4200",
+        validation_alias="CORS_ALLOWED_ORIGINS",
+    )
+
+    @property
+    def cors_origins(self) -> list[str]:
+        return [
+            origin.strip()
+            for origin in self.cors_allowed_origins.split(",")
+            if origin.strip()
+        ]
 
     model_config = SettingsConfigDict(
         env_file=".env",

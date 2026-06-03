@@ -1,0 +1,56 @@
+<section class="city-list" *ngIf="cities.length; else emptyState">
+  <article class="city-card" *ngFor="let city of cities; trackBy: trackByCityId">
+    <div class="city-card__header">
+      <div>
+        <h2>{{ city.name }}</h2>
+        <p>Added: {{ city.created_at | date:'medium' }}</p>
+      </div>
+      <button
+        type="button"
+        class="city-card__refresh"
+        [disabled]="isRefreshing(city.id)"
+        (click)="refreshCity.emit(city.id)"
+      >
+        {{ isRefreshing(city.id) ? 'Refreshing...' : 'Refresh weather' }}
+      </button>
+    </div>
+
+    <ng-container *ngIf="city.latest_weather as weather; else pendingWeather">
+      <div class="weather-grid">
+        <div class="weather-metric weather-metric--temperature">
+          <span>Temperature</span>
+          <strong>{{ weather.temperature | number:'1.0-1' }} °C</strong>
+        </div>
+        <div class="weather-metric">
+          <span>Description</span>
+          <strong>{{ weather.description }}</strong>
+        </div>
+        <div class="weather-metric">
+          <span>Humidity</span>
+          <strong>{{ weather.humidity }}%</strong>
+        </div>
+        <div class="weather-metric">
+          <span>Feels like</span>
+          <strong>{{ weather.feels_like | number:'1.0-1' }} °C</strong>
+        </div>
+      </div>
+      <p class="city-card__recommendation">{{ weather.recommendation }}</p>
+      <p class="city-card__updated">
+        Last updated: {{ weather.created_at | date:'medium' }}
+      </p>
+    </ng-container>
+  </article>
+</section>
+
+<ng-template #pendingWeather>
+  <div class="city-card__pending">
+    Weather is still being processed in the background. Reload the list in a few seconds.
+  </div>
+</ng-template>
+
+<ng-template #emptyState>
+  <section class="empty-state">
+    <h2>No cities yet</h2>
+    <p>Add the first city, and Celery will start asynchronous weather enrichment.</p>
+  </section>
+</ng-template>

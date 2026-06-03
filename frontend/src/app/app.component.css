@@ -1,0 +1,74 @@
+.app-shell {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0 auto;
+  max-width: 1100px;
+  padding: 2rem 1rem;
+}
+
+.hero,
+.panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1.25rem;
+  box-shadow: 0 18px 40px rgb(15 23 42 / 8%);
+  padding: 1.5rem;
+}
+
+.hero {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.hero__eyebrow {
+  color: #0284c7;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  color: #0f172a;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1;
+  margin: 0;
+}
+
+.hero__description {
+  color: #475569;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 1rem 0 0;
+  max-width: 680px;
+}
+
+.alert,
+.loading {
+  border-radius: 0.85rem;
+  margin: 0;
+  padding: 1rem;
+}
+
+.alert {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.loading {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+@media (max-width: 720px) {
+  .hero {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hero__reload {
+    width: 100%;
+  }
+}
