@@ -1,0 +1,89 @@
+<main class="page-shell">
+  <section class="hero-card">
+    <div>
+      <p class="eyebrow">Weather Enrichment Service</p>
+      <h1>City weather dashboard</h1>
+      <p class="hero-copy">
+        Add a city, let the backend enrich it asynchronously, and refresh weather data when needed.
+      </p>
+    </div>
+
+    <form class="city-form" (ngSubmit)="addCity()" novalidate>
+      <label for="cityName">City name</label>
+      <div class="form-row">
+        <input
+          id="cityName"
+          type="text"
+          [formControl]="cityName"
+          placeholder="For example, London"
+          autocomplete="off"
+        >
+        <button type="submit" [disabled]="isAdding">
+          {{ isAdding ? 'Adding...' : 'Add city' }}
+        </button>
+      </div>
+      <p class="field-error" *ngIf="cityName.touched && cityName.invalid">
+        Please enter a city name up to 120 characters.
+      </p>
+    </form>
+  </section>
+
+  <section class="status-bar" *ngIf="isLoading || errorMessage">
+    <p class="loading" *ngIf="isLoading">Loading weather data...</p>
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  </section>
+
+  <section class="cities-grid" *ngIf="cities.length; else emptyState">
+    <article class="city-card" *ngFor="let city of cities; trackBy: trackByCityId">
+      <div class="city-card__header">
+        <div>
+          <h2>{{ city.name }}</h2>
+          <p>Added {{ city.created_at | date: 'mediumDate' }}</p>
+        </div>
+        <button
+          class="secondary-button"
+          type="button"
+          [disabled]="isRefreshing(city.id)"
+          (click)="refreshCity(city)"
+        >
+          {{ isRefreshing(city.id) ? 'Queued...' : 'Refresh weather' }}
+        </button>
+      </div>
+
+      <ng-container *ngIf="city.latest_weather; else pendingWeather">
+        <div class="weather-main">
+          <span class="temperature">{{ city.latest_weather.temperature | number: '1.0-1' }}°C</span>
+          <span class="description">{{ city.latest_weather.description }}</span>
+        </div>
+        <dl class="weather-details">
+          <div>
+            <dt>Humidity</dt>
+            <dd>{{ city.latest_weather.humidity }}%</dd>
+          </div>
+          <div>
+            <dt>Feels like</dt>
+            <dd>{{ city.latest_weather.feels_like | number: '1.0-1' }}°C</dd>
+          </div>
+          <div>
+            <dt>Wind</dt>
+            <dd>{{ city.latest_weather.wind_speed | number: '1.0-1' }} m/s</dd>
+          </div>
+        </dl>
+        <p class="recommendation">{{ city.latest_weather.recommendation }}</p>
+      </ng-container>
+    </article>
+  </section>
+
+  <ng-template #pendingWeather>
+    <div class="pending-weather">
+      Weather enrichment is queued. Refresh the list in a moment.
+    </div>
+  </ng-template>
+
+  <ng-template #emptyState>
+    <section class="empty-state" *ngIf="!isLoading">
+      <h2>No cities yet</h2>
+      <p>Add your first city to start asynchronous weather enrichment.</p>
+    </section>
+  </ng-template>
+</main>
